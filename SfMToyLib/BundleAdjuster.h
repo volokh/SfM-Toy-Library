@@ -28,8 +28,8 @@
  */
 
 #include <vector>
-#include <opencv2/core/core.hpp>
 #include "Common.h"
+#include <map>
 
 class BundleAdjuster {
 public:

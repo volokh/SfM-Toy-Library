@@ -35,7 +35,6 @@
 #include <opencv2/video/tracking.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
-#include <opencv2/nonfree/nonfree.hpp>
 
 #include <iostream>
 #include <set>
@@ -48,14 +47,15 @@ RichFeatureMatcher::RichFeatureMatcher(std::vector<cv::Mat>& imgs_,
 									   std::vector<std::vector<cv::KeyPoint> >& imgpts_) :
 	imgpts(imgpts_), imgs(imgs_)
 {
-	detector = FeatureDetector::create("PyramidFAST");
-	extractor = DescriptorExtractor::create("ORB");
+	detector = FastFeatureDetector::create();//::create("PyramidFAST");
+	extractor = ORB::create();//DescriptorExtractor::create("ORB");
 	
 	std::cout << " -------------------- extract feature points for all images -------------------\n";
 	
 	detector->detect(imgs, imgpts);
 	extractor->compute(imgs, imgpts, descriptors);
-}	
+	std::cout << " ------------------------------------- done -----------------------------------\n";
+}
 
 void RichFeatureMatcher::MatchFeatures(int idx_i, int idx_j, vector<DMatch>* matches) {
 	

@@ -33,8 +33,10 @@
 
 using namespace std;
 
-#ifdef HAVE_OPENCV_GPU
-#include <opencv2/gpu/gpu.hpp>
+#include <opencv2/opencv_modules.hpp>
+#include <opencv2/calib3d.hpp>
+#ifdef HAVE_OPENCV_CUDALEGACY
+#include <opencv2/cudalegacy.hpp>
 #endif
 #include <opencv2/calib3d/calib3d.hpp>
 
@@ -234,14 +236,14 @@ bool MultiCameraPnP::FindPoseEstimation(
 		CV_PROFILE("solvePnPRansac",cv::solvePnPRansac(ppcloud, imgPoints, K, distortion_coeff, rvec, t, true, 1000, 0.006 * maxVal, 0.25 * (double)(imgPoints.size()), inliers, CV_EPNP);)
 		//CV_PROFILE("solvePnP",cv::solvePnP(ppcloud, imgPoints, K, distortion_coeff, rvec, t, true, CV_EPNP);)
 	} else {
-#ifdef HAVE_OPENCV_GPU
+#ifdef HAVE_OPENCV_CUDALEGACY
 		//use GPU ransac
 		//make sure datatstructures are cv::gpu compatible
 		cv::Mat ppcloud_m(ppcloud); ppcloud_m = ppcloud_m.t();
 		cv::Mat imgPoints_m(imgPoints); imgPoints_m = imgPoints_m.t();
 		cv::Mat rvec_,t_;
 
-		cv::gpu::solvePnPRansac(ppcloud_m,imgPoints_m,K_32f,distcoeff_32f,rvec_,t_,false);
+		cv::cuda::solvePnPRansac(ppcloud_m,imgPoints_m,K_32f,distcoeff_32f,rvec_,t_,false);
 
 		rvec_.convertTo(rvec,CV_64FC1);
 		t_.convertTo(t,CV_64FC1);
@@ -535,6 +537,9 @@ void MultiCameraPnP::RecoverDepthFromImages() {
 			}
 		}
 		int i = max_2d3d_view; //highest 2d3d matching view
+
+		if (0 > i)
+			continue;
 
 		std::cout << "-------------------------- " << imgs_names[i] << " --------------------------\n";
 		done_views.insert(i); // don't repeat it for now

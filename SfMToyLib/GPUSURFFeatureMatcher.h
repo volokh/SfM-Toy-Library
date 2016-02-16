@@ -29,19 +29,19 @@
 #include "IFeatureMatcher.h"
 #include <opencv2/opencv_modules.hpp>
 
-#ifdef HAVE_OPENCV_GPU
-#include <opencv2/gpu/gpu.hpp>
-#include <opencv2/nonfree/gpu.hpp>
-
+#ifdef HAVE_OPENCV_CUDAFEATURES2D
+#include <opencv2/core/cuda.hpp>//gpu/gpu.hpp>
+#include <opencv2/xfeatures2d.hpp>
+#include <opencv2/xfeatures2d/cuda.hpp>
 
 class GPUSURFFeatureMatcher : public IFeatureMatcher {
 private:
-	cv::Ptr<cv::gpu::SURF_GPU> extractor;
+	cv::Ptr<cv::cuda::SURF_CUDA> extractor;// = cv::xfeatures2d::SIFT::create(...);
 	
-	std::vector<cv::gpu::GpuMat> descriptors;
+	std::vector<cv::cuda::GpuMat> descriptors;
 	
-	std::vector<cv::gpu::GpuMat> imgs; 
-	std::vector<cv::gpu::GpuMat> imggpupts;
+	std::vector<cv::cuda::GpuMat> imgs;
+	std::vector<cv::cuda::GpuMat> imggpupts;
 	std::vector<std::vector<cv::KeyPoint> >& imgpts;
 
 	bool use_ratio_test;

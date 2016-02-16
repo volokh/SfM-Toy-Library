@@ -12,7 +12,10 @@ set(USE_SSBA OFF CACHE BOOL "Build using the SSBA-3.0 library?")
 if(USE_SSBA)
 	link_directories(${SSBA_LIBRARY_DIR})
 	include_directories("${SSBA_LIBRARY_DIR}/../")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_SSBA")
+	include_directories(
+		${CMAKE_CURRENT_LIST_DIR}/../3rdparty/SSBA-3.0
+	)
+	add_definitions(-DHAVE_SSBA)
 endif(USE_SSBA)
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-sign-compare")
