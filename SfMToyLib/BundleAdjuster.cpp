@@ -30,19 +30,22 @@
 #include "BundleAdjuster.h"
 #include "Common.h"
 
-using namespace cv; 
+using namespace cv;
 using namespace std;
 
+#include <opencv2/core/mat.hpp>
+#include <opencv2/core/core.hpp>
+
 #ifndef HAVE_SSBA
-#include <opencv2/contrib/contrib.hpp>
+#include <opencv2/opencv_modules.hpp>
 #endif
 
 #ifdef HAVE_SSBA
 #define V3DLIB_ENABLE_SUITESPARSE
 
-#include "../3rdparty/SSBA-3.0/Math/v3d_linear.h"
-#include "../3rdparty/SSBA-3.0/Base/v3d_vrmlio.h"
-#include "../3rdparty/SSBA-3.0/Geometry/v3d_metricbundle.h"
+#include <Math/v3d_linear.h>
+#include <Base/v3d_vrmlio.h>
+#include <Geometry/v3d_metricbundle.h>
 
 using namespace V3D;
 

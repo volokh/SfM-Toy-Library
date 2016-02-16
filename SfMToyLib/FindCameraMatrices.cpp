@@ -183,9 +183,15 @@ Mat GetFundamentalMat(const vector<KeyPoint>& imgpts1,
 		cout << "pts1 " << pts1.size() << " (orig pts " << imgpts1_tmp.size() << ")" << endl;
 		cout << "pts2 " << pts2.size() << " (orig pts " << imgpts2_tmp.size() << ")" << endl;
 #endif
-		double minVal,maxVal;
-		cv::minMaxIdx(pts1,&minVal,&maxVal);
-		F = findFundamentalMat(pts1, pts2, FM_RANSAC, 0.006 * maxVal, 0.99, status); //threshold from [Snavely07 4.1]
+		try
+		{
+			double minVal,maxVal;
+			cv::minMaxIdx(pts1,&minVal,&maxVal);
+			F = findFundamentalMat(pts1, pts2, FM_RANSAC, 0.006 * maxVal, 0.99, status); //threshold from [Snavely07 4.1]
+		} catch (const cv::Exception &ex)
+		{
+
+		}
 	}
 	
 	vector<DMatch> new_matches;

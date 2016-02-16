@@ -29,7 +29,7 @@
 
 #include "GPUSURFFeatureMatcher.h"
 
-#ifdef HAVE_OPENCV_GPU
+#ifdef HAVE_OPENCV_CUDAFEATURES2D
 
 #include "FindCameraMatrices.h"
 #include <opencv2/features2d/features2d.hpp>
@@ -37,23 +37,23 @@
 #include <opencv2/video/tracking.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
-#include <opencv2/nonfree/gpu.hpp>
+#include <opencv2/xfeatures2d/cuda.hpp>
 
 #include <iostream>
 #include <set>
 
 using namespace std;
 using namespace cv;
-using namespace cv::gpu;
+using namespace cv::cuda;
 
 //c'tor
 GPUSURFFeatureMatcher::GPUSURFFeatureMatcher(vector<cv::Mat>& imgs_, 
 									   vector<std::vector<cv::KeyPoint> >& imgpts_) :
 	imgpts(imgpts_),use_ratio_test(true)
 {
-	cv::gpu::printShortCudaDeviceInfo(cv::gpu::getDevice());
+	cv::cuda::printShortCudaDeviceInfo(cv::cuda::getDevice());
 
-	extractor = new gpu::SURF_GPU();
+	extractor = new cv::cuda::SURF_CUDA();
 	
 	std::cout << " -------------------- extract feature points for all images (GPU) -------------------\n";
 	
@@ -97,7 +97,8 @@ void GPUSURFFeatureMatcher::MatchFeatures(int idx_i, int idx_j, vector<DMatch>* 
 	}
 	
 	//matching descriptor vectors using Brute Force matcher
-	BruteForceMatcher_GPU<L2<float> > matcher;
+	BFMatcher matcher;
+	//BruteForceMatcher_GPU<L2<float> > matcher;
 	std::vector< DMatch > matches_;
 	if (matches == NULL) {
 		matches = &matches_;
@@ -109,8 +110,9 @@ void GPUSURFFeatureMatcher::MatchFeatures(int idx_i, int idx_j, vector<DMatch>* 
 			vector<vector<DMatch> > knn_matches;
 			GpuMat trainIdx,distance,allDist;
 			CV_PROFILE("match", 
-				matcher.knnMatchSingle(descriptors_1,descriptors_2,trainIdx,distance,allDist,2); 
-				matcher.knnMatchDownload(trainIdx,distance,knn_matches);
+				matcher.knnMatch(descriptors_1, descriptors_2, knn_matches, 2);// trainIdx,distance,allDist,2);
+				/*matcher.knnMatchSingle(descriptors_1,descriptors_2,trainIdx,distance,allDist,2);
+				matcher.knnMatchDownload(trainIdx,distance,knn_matches);*/
 			)
 
 			(*matches).clear();
