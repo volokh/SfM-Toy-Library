@@ -17,7 +17,7 @@ file(GLOB COLAMD_SRC
 	SuiteSparse_config/SuiteSparse_config.c
 	)
 include_directories("SuiteSparse_config/")
-add_library(colamd ${COLAMD_SRC})
+add_library(colamd SHARED ${COLAMD_SRC})
 set ( V3D_INCLUDE_DIRS ${V3D_INCLUDE_DIRS} "COLAMD/Include" )
 
 
@@ -61,5 +61,5 @@ set (ALL_SRC
     ${BASE_SRC} ${MATH_SRC} ${GEOMETRY_SRC} ${GL_SRC} ${CUDA_SRC}
 )
 
-add_library(V3D ${ALL_SRC})
+add_library(V3D SHARED ${ALL_SRC})
 add_subdirectory(Apps)

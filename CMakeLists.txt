@@ -128,11 +128,13 @@ include_directories(
 	)
 
 # GUI part
+if(USE_GUI)
 add_executable(SfMToyUI 
 	ViewerInterface.h ViewerInterface.cpp
 	sfmviewer.h sfmviewer.cpp
 	main.cpp
 	)
+
 
 target_link_libraries(SfMToyUI 
 	SfMToyLibrary
@@ -141,6 +143,7 @@ target_link_libraries(SfMToyUI
 	${QGLVIEWER_LIB}
 	${OPENGL_LIBRARIES}
 	)
+endif()
 
 if(APPLE)
 	add_custom_command(TARGET SfMToyUI POST_BUILD COMMAND install_name_tool -change QGLViewer.framework/Versions/2/QGLViewer ${QGLVIEWER_LIB}/Versions/2/QGLViewer ./SfMToyUI )

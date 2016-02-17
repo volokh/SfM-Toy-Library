@@ -11,8 +11,9 @@ set(USE_SSBA OFF CACHE BOOL "Build using the SSBA-3.0 library?")
 
 if(USE_SSBA)
 	link_directories(${SSBA_LIBRARY_DIR})
-	include_directories("${SSBA_LIBRARY_DIR}/../")
 	include_directories(
+		${SSBA_LIBRARY_DIR}/../
+		${SSBA_LIBRARY_DIR}
 		${CMAKE_CURRENT_LIST_DIR}/../3rdparty/SSBA-3.0
 	)
 	add_definitions(-DHAVE_SSBA)
@@ -39,7 +40,7 @@ file(GLOB SFM_LIB_SOURCES
 	SfMUpdateListener.*
 )
 
-add_library(SfMToyLibrary ${SFM_LIB_SOURCES} )
+add_library(SfMToyLibrary SHARED ${SFM_LIB_SOURCES} )
 if(MSVC)
 	set_target_properties(SfMToyLibrary PROPERTIES COMPILE_FLAGS "/openmp")
 	if(USE_SSBA)
@@ -47,11 +48,18 @@ if(MSVC)
 	endif(USE_SSBA)
 endif()
 if(UNIX)
+
+	include_directories(
+		"/usr/local/cuda/include"
+	)
+
 	if(USE_SSBA)
 		# default is to build SSBA as static libs...
 		target_link_libraries(SfMToyLibrary 
-			"${SSBA_LIBRARY_DIR}/libV3D.a" 
-			"${SSBA_LIBRARY_DIR}/libcolamd.a"
+		#"${SSBA_LIBRARY_DIR}/libV3D.a"
+		#"${SSBA_LIBRARY_DIR}/libcolamd.a"
+		"${SSBA_LIBRARY_DIR}/libV3D.so"
+		"${SSBA_LIBRARY_DIR}/libcolamd.so"
 			)
 	endif(USE_SSBA)
 endif()
