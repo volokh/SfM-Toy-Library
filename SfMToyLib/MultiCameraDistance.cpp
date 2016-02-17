@@ -66,7 +66,9 @@ void MultiCameraDistance::setImages(const std::vector<cv::Mat>& imgs_,
 
 		imgpts.push_back(std::vector<cv::KeyPoint>());
 		imgpts_good.push_back(std::vector<cv::KeyPoint>());
-		std::cout << imgs_names[i] << std::endl;
+
+        if (imgs_names.size() > i)
+            std::cout << imgs_names[i] << std::endl;
 	}
 	std::cout << std::endl;
 
@@ -140,7 +142,8 @@ void MultiCameraDistance::OnlyMatchFeatures()
 		for (frame_num_i = 0; frame_num_i < loop1_top; frame_num_i++) {
 			for (int frame_num_j = frame_num_i + 1; frame_num_j < loop2_top; frame_num_j++)
 			{
-				std::cout << "------------ Match " << imgs_names[frame_num_i] << ","<<imgs_names[frame_num_j]<<" ------------\n";
+                if (imgs_names.size() > frame_num_i && imgs_names.size() > frame_num_j)
+                    std::cout << "------------ Match " << imgs_names[frame_num_i] << ","<<imgs_names[frame_num_j]<<" ------------\n";
 				std::vector<cv::DMatch> matches_tmp;
 				feature_matcher->MatchFeatures(frame_num_i,frame_num_j,&matches_tmp);
 				matches_matrix[std::make_pair(frame_num_i,frame_num_j)] = matches_tmp;

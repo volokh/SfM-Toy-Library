@@ -100,7 +100,8 @@ void MultiCameraPnP::GetBaseLineTriangulation() {
 		m_second_view = (*highest_pair).second.second;
 		m_first_view  = (*highest_pair).second.first;
 
-		std::cout << " -------- " << imgs_names[m_first_view] << " and " << imgs_names[m_second_view] << " -------- " <<std::endl;
+        if (imgs_names.size() > m_first_view && imgs_names.size() > m_second_view)
+            std::cout << " -------- " << imgs_names[m_first_view] << " and " << imgs_names[m_second_view] << " -------- " <<std::endl;
 		//what if reconstrcution of first two views is bad? fallback to another pair
 		//See if the Fundamental Matrix between these two views is good
 		goodF = FindCameraMatrices(K, Kinv, distortion_coeff,
@@ -148,7 +149,8 @@ void MultiCameraPnP::GetBaseLineTriangulation() {
 		exit(0);
 	}
 	
-	cout << "Taking baseline from " << imgs_names[m_first_view] << " and " << imgs_names[m_second_view] << endl;
+    if (imgs_names.size() > m_first_view && imgs_names.size() > m_second_view)
+        cout << "Taking baseline from " << imgs_names[m_first_view] << " and " << imgs_names[m_second_view] << endl;
 	
 //	double reproj_error;
 //	{
@@ -314,7 +316,8 @@ bool MultiCameraPnP::TriangulatePointsBetweenViews(
 	vector<int>& add_to_cloud
 	) 
 {
-	cout << " Triangulate " << imgs_names[working_view] << " and " << imgs_names[older_view] << endl;
+    if (imgs_names.size() > working_view && imgs_names.size() > older_view)
+        cout << " Triangulate " << imgs_names[working_view] << " and " << imgs_names[older_view] << endl;
 	//get the left camera matrix
 	//TODO: potential bug - the P mat for <view> may not exist? or does it...
 	cv::Matx34d P = Pmats[older_view];
@@ -528,7 +531,10 @@ void MultiCameraPnP::RecoverDepthFromImages() {
 			if(done_views.find(_i) != done_views.end()) continue; //already done with this view
 
 			vector<cv::Point3f> tmp3d; vector<cv::Point2f> tmp2d;
-			cout << imgs_names[_i] << ": ";
+
+            if (imgs_names.size() > _i)
+                cout << imgs_names[_i] << ": ";
+
 			Find2D3DCorrespondences(_i,tmp3d,tmp2d);
 			if(tmp3d.size() > max_2d3d_count) {
 				max_2d3d_count = tmp3d.size();
@@ -538,10 +544,12 @@ void MultiCameraPnP::RecoverDepthFromImages() {
 		}
 		int i = max_2d3d_view; //highest 2d3d matching view
 
-		if (0 > i)
+		if (0 > i || imgs_names.size() <= i)
 			continue;
 
-		std::cout << "-------------------------- " << imgs_names[i] << " --------------------------\n";
+        if (imgs_names.size() > i)
+            std::cout << "-------------------------- " << imgs_names[i] << " --------------------------\n";
+
 		done_views.insert(i); // don't repeat it for now
 
 		bool pose_estimated = FindPoseEstimation(i,rvec,t,R,max_3d,max_2d);
@@ -559,7 +567,8 @@ void MultiCameraPnP::RecoverDepthFromImages() {
 			int view = *done_view;
 			if( view == i ) continue; //skip current...
 
-			cout << " -> " << imgs_names[view] << endl;
+            if (imgs_names.size() > view)
+                cout << " -> " << imgs_names[view] << endl;
 			
 			vector<CloudPoint> new_triangulated;
 			vector<int> add_to_cloud;
