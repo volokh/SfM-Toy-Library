@@ -90,8 +90,14 @@ void OFFeatureMatcher::MatchFeatures(int idx_i, int idx_j, vector<DMatch>* match
 		gpu_nextImg.upload(gray);
 		gpu_prevPts.upload(Mat(i_pts).t());
 
-		Ptr<cuda::SparsePyrLKOpticalFlow> gpu_of = cuda::SparsePyrLKOpticalFlow::create();
-		gpu_of->calc(gpu_prevImg,gpu_nextImg,gpu_prevPts,gpu_nextPts,gpu_status,gpu_error);
+        try
+        {
+            Ptr<cuda::SparsePyrLKOpticalFlow> gpu_of = cuda::SparsePyrLKOpticalFlow::create();
+            gpu_of->calc(gpu_prevImg,gpu_nextImg,gpu_prevPts,gpu_nextPts,gpu_status,gpu_error);
+        } catch (const std::exception &ex)
+        {
+            std::cerr << "OFFeatureMatcher::MatchFeatures(): exception: " << ex.what();
+        }
 
 		Mat j_pts_mat;
 		gpu_nextPts.download(j_pts_mat);
