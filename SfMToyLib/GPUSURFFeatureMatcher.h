@@ -40,7 +40,7 @@ private:
 	
 	std::vector<cv::cuda::GpuMat> descriptors;
 	
-	std::vector<cv::cuda::GpuMat> imgs;
+    //std::vector<cv::cuda::GpuMat> imgs;
 	std::vector<cv::cuda::GpuMat> imggpupts;
 	std::vector<std::vector<cv::KeyPoint> >& imgpts;
 

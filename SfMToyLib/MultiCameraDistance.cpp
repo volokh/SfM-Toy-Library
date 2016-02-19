@@ -144,6 +144,7 @@ void MultiCameraDistance::OnlyMatchFeatures()
 			{
                 if (imgs_names.size() > frame_num_i && imgs_names.size() > frame_num_j)
                     std::cout << "------------ Match " << imgs_names[frame_num_i] << ","<<imgs_names[frame_num_j]<<" ------------\n";
+
 				std::vector<cv::DMatch> matches_tmp;
 				feature_matcher->MatchFeatures(frame_num_i,frame_num_j,&matches_tmp);
 				matches_matrix[std::make_pair(frame_num_i,frame_num_j)] = matches_tmp;

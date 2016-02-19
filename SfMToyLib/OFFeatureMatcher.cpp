@@ -72,6 +72,11 @@ void OFFeatureMatcher::MatchFeatures(int idx_i, int idx_j, vector<DMatch>* match
 	vector<Point2f> j_pts(i_pts.size());
 	
 	// making sure images are grayscale
+    std::cerr << "OFFeatureMatcher::MatchFeatures(): " << idx_i << ", " << idx_j
+              << ", i ch:" << imgs[idx_i].channels() << ", j ch:" << imgs[idx_j].channels()
+              << ", total:" << imgs[idx_j].total() << ", w:" << imgs[idx_j].size().width
+              << ", h:" << imgs[idx_j].size().height
+              << ", i depth:" << imgs[idx_i].depth() << ", j depth:" << imgs[idx_j].depth() << '\n';
 	Mat prevgray,gray;
 	if (imgs[idx_i].channels() == 3) {
 		cvtColor(imgs[idx_i],prevgray,CV_RGB2GRAY);
