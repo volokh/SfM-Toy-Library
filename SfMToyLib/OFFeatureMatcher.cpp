@@ -86,7 +86,16 @@ void OFFeatureMatcher::MatchFeatures(int idx_i, int idx_j, vector<DMatch>* match
 		gray = imgs[idx_j];
 	}
 
-	vector<uchar> vstatus(i_pts.size()); vector<float> verror(i_pts.size());
+    std::cerr << "OFFeatureMatcher::MatchFeatures(): " << idx_i << ", " << idx_j
+              << ", i ch:" << prevgray.channels() << ", j ch:" << gray.channels()
+              << ", total:" << prevgray.total() << ", w:" << prevgray.size().width
+              << ", h:" << prevgray.size().height
+              << ", i depth:" << prevgray.depth() << ", j depth:" << gray.depth()
+              << ", iptsize:" << i_pts.size()
+              << '\n';
+
+    vector<uchar> vstatus(i_pts.size());
+    vector<float> verror(i_pts.size());
 
 #ifdef HAVE_OPENCV_CUDAOPTFLOW
 	if(use_gpu) {
@@ -94,11 +103,23 @@ void OFFeatureMatcher::MatchFeatures(int idx_i, int idx_j, vector<DMatch>* match
 		gpu_prevImg.upload(prevgray);
 		gpu_nextImg.upload(gray);
 		gpu_prevPts.upload(Mat(i_pts).t());
+        gpu_nextPts.upload(Mat(i_pts).t());
 
+        std::cerr << "OFFeatureMatcher::MatchFeatures(): gpu:"
+                  << ", ch:" << gpu_prevImg.channels() << ", j ch:" << gpu_nextImg.channels()
+                  << ", elsize:" << gpu_prevImg.elemSize() << ", w:" << gpu_prevImg.size().width
+                  << ", h:" << gpu_prevImg.size().height
+                  << ", i depth:" << gpu_prevImg.depth() << ", j depth:" << gpu_nextImg.depth()
+                  << '\n';
         try
         {
             Ptr<cuda::SparsePyrLKOpticalFlow> gpu_of = cuda::SparsePyrLKOpticalFlow::create();
-            gpu_of->calc(gpu_prevImg,gpu_nextImg,gpu_prevPts,gpu_nextPts,gpu_status,gpu_error);
+            gpu_of->calc(gpu_prevImg
+                         ,gpu_nextImg
+                         ,gpu_prevPts
+                         ,gpu_nextPts
+                         ,gpu_status
+                         ,gpu_error);
         } catch (const std::exception &ex)
         {
             std::cerr << "OFFeatureMatcher::MatchFeatures(): exception: " << ex.what();
