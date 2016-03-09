@@ -19,6 +19,9 @@ file(GLOB COLAMD_SRC
 include_directories("SuiteSparse_config/")
 add_library(colamd SHARED ${COLAMD_SRC})
 set ( V3D_INCLUDE_DIRS ${V3D_INCLUDE_DIRS} "COLAMD/Include" )
+target_link_libraries(colamd
+	rt
+)
 
 
 
