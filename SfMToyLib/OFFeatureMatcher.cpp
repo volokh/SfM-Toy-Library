@@ -87,7 +87,7 @@ void OFFeatureMatcher::MatchFeatures(int idx_i, int idx_j, vector<DMatch>* match
 		gpu_nextImg.upload(gray);
 		gpu_prevPts.upload(Mat(i_pts).t());
 
-		Ptr<cuda::SparsePyrLKOpticalFlow> gpu_of = cuda::SparsePyrLKOpticalFlow::create();
+		Ptr<cuda::SparsePyrLKOpticalFlow> gpu_of;// = cuda::SparsePyrLKOpticalFlow::create();
 		gpu_of->calc(gpu_prevImg,gpu_nextImg,gpu_prevPts,gpu_nextPts,gpu_status,gpu_error);
 
 		Mat j_pts_mat;

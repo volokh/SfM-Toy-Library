@@ -379,7 +379,7 @@ void BundleAdjuster::adjustBundle(vector<CloudPoint>& pointcloud,
 	}
 	
 	cout << "Adjust bundle... \n";
-	cv::LevMarqSparse::bundleAdjust(points,imagePoints,visibility,cameraMatrix,R,T,distCoeffs);
+//!1	cv::LevMarqSparse::bundleAdjust(points,imagePoints,visibility,cameraMatrix,R,T,distCoeffs);
 	cout << "DONE\n";
 	
 	//get the BAed points
