@@ -6,7 +6,7 @@ if(EIGEN_INCLUDE_DIRS) # if compiling with PCL, it will bring Eigen with it
 	add_definitions( -DUSE_EIGEN )
 endif()
 
-set(SSBA_LIBRARY_DIR "${CMAKE_SOURCE_DIR}/3rdparty/SSBA-3.0/build" CACHE PATH "Directory to find SSBA libs")
+set(SSBA_LIBRARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/SSBA-3.0" CACHE PATH "Directory to find SSBA libs")
 set(USE_SSBA OFF CACHE BOOL "Build using the SSBA-3.0 library?")
 
 if(USE_SSBA)
@@ -39,6 +39,8 @@ file(GLOB SFM_LIB_SOURCES
 	AbstractFeatureMatcher.*
 	SfMUpdateListener.*
 )
+
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../3rdparty/SSBA-3.0 ${CMAKE_CURRENT_BINARY_DIR}/SSBA-3.0)
 
 add_library(SfMToyLibrary SHARED ${SFM_LIB_SOURCES} )
 if(MSVC)
