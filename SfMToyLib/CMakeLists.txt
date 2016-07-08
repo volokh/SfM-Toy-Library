@@ -55,13 +55,11 @@ if(UNIX)
 		"/usr/local/cuda/include"
 	)
 
-	if(USE_SSBA)
-		# default is to build SSBA as static libs...
-		target_link_libraries(SfMToyLibrary 
-		#"${SSBA_LIBRARY_DIR}/libV3D.a"
-		#"${SSBA_LIBRARY_DIR}/libcolamd.a"
-		"${SSBA_LIBRARY_DIR}/libV3D.so"
-		"${SSBA_LIBRARY_DIR}/libcolamd.so"
-			)
-	endif(USE_SSBA)
+    if(USE_SSBA)
+        # default is to build SSBA as static libs...
+        target_link_libraries(SfMToyLibrary
+            V3D
+            colamd
+        )
+    endif(USE_SSBA)
 endif()
