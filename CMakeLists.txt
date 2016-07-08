@@ -25,7 +25,7 @@ cmake_minimum_required(VERSION 2.8)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 3.1 REQUIRED)
 find_package(OpenMP)
 find_package(OpenGL)
 
